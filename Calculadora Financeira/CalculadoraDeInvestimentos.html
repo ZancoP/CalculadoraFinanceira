@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Investimentos</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #0056b3;
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 350px;
+            text-align: center;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .input-group label {
+            width: 50%;
+            text-align: left;
+        }
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background: #f4f4f4;
+            border-radius: 5px;
+            padding: 5px 10px;
+            border: 1px solid #ced4da;
+            width: 50%;
+            position: relative;
+        }
+        .input-group input[type="number"] {
+            width: 100%;
+            border: none;
+            background: none;
+            outline: none;
+            padding: 5px;
+            font-size: 14px;
+        }
+        .input-wrapper .unit {
+            font-weight: bold;
+            color: #555;
+            position: absolute;
+            right: 10px;
+        }
+        button {
+            padding: 10px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #004494;
+        }
+        .result {
+            margin: 20px 0;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .result p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .valor-acumulado {
+            font-weight: bold;
+            color: #28a745;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>
+        <img src="HZ.png" alt="Logo HZ" width="50" height="50">
+        Calculadora de Investimentos
+    </h1>
+    <div class="container">
+        <div class="input-group">
+            <label for="aporte">Aporte Inicial:</label>
+            <div class="input-wrapper">
+                <input type="number" id="aporte" placeholder="0">
+                <span class="unit">R$</span>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="deposito">Depósito Mensal:</label>
+            <div class="input-wrapper">
+                <input type="number" id="deposito" placeholder="0">
+                <span class="unit">R$</span>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="juros">Juro Anual:</label>
+            <div class="input-wrapper">
+                <input type="number" id="juros" placeholder="0">
+                <span class="unit">%</span>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="meses">Número de Meses:</label>
+            <div class="input-wrapper">
+                <input type="number" id="meses" placeholder="0">
+            </div>
+        </div>
+
+        <button onclick="calcular()">Calcular</button>
+
+        <div id="resultado" class="result" style="display:none;">
+            <h2>Resultados</h2>
+            <p id="rentabilidade_ultimo_mes"></p>
+            <p id="total_depositos"></p>
+            <p id="total_juros_ganhos"></p>
+            <p id="valor_total_acumulado" class="valor-acumulado"></p>
+        </div>
+    </div>
+
+    <script>
+        function calcular() {
+            const aporteInicial = parseFloat(document.getElementById('aporte').value) || 0;
+            const P = parseFloat(document.getElementById('deposito').value) || 0;
+            const j = parseFloat(document.getElementById('juros').value) || 0;
+            const r = j / (12 * 100);
+            const n = parseInt(document.getElementById('meses').value) || 0;
+
+            let valor_acumulado = aporteInicial;
+            const rentabilidades = [];
+            let total_juros_ganhos = 0;
+            let total_depositos = aporteInicial;
+
+            for (let mes = 1; mes <= n; mes++) {
+                const Ren = valor_acumulado * r;
+                valor_acumulado += Ren + P;
+                total_juros_ganhos += Ren;
+                total_depositos += P;
+                rentabilidades.push(Ren);
+            }
+
+            document.getElementById('rentabilidade_ultimo_mes').innerText = `Rentabilidade do último mês: R$ ${rentabilidades[rentabilidades.length - 1].toFixed(2)}`;
+            document.getElementById('total_depositos').innerText = `Total de Depósitos: R$ ${total_depositos.toFixed(2)}`;
+            document.getElementById('total_juros_ganhos').innerText = `Total de Juros Ganhos: R$ ${total_juros_ganhos.toFixed(2)}`;
+            document.getElementById('valor_total_acumulado').innerText = `Valor Total Acumulado: R$ ${valor_acumulado.toFixed(2)}`;
+            document.getElementById('resultado').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
